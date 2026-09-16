@@ -309,3 +309,457 @@
 .memo-item.done .memo-responsible {
 	color: #b0b0b5;
 }
+
+/* ---------- 首页入口 ---------- */
+.home-entries {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	width: 100%;
+}
+
+.entry-icon.loan-icon {
+	background: #3b82f6;
+}
+
+/* ---------- 贷款页 ---------- */
+.loan-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.9rem 1rem 0.7rem;
+	margin: 0 -1rem 0.9rem;
+	background: #faf7f2;
+	border-bottom: 1px solid #ece8e1;
+}
+
+.loan-header .back-btn {
+	position: absolute;
+	left: 1rem;
+}
+
+.loan-header h1 {
+	font-size: 1.25rem;
+	color: #3f3f46;
+}
+
+.loan-form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.7rem;
+	margin-bottom: 0.9rem;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.field-label {
+	font-size: 0.85rem;
+	color: #52525b;
+	font-weight: 500;
+}
+
+.loan-form input,
+.loan-form select {
+	width: 100%;
+	padding: 0.75rem 0.9rem;
+	border: 1px solid #d4d4d8;
+	border-radius: 10px;
+	font-size: 1rem;
+	background: #fff;
+	color: #27272a;
+	min-height: 46px;
+}
+
+.loan-form input:focus,
+.loan-form select:focus {
+	outline: 2px solid #f59e0b;
+	border-color: transparent;
+}
+
+.field-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	border: 1px dashed #d4d4d8;
+	border-radius: 12px;
+	padding: 0.6rem 0.7rem 0.8rem;
+}
+
+.field-group-title {
+	font-size: 0.85rem;
+	color: #52525b;
+	font-weight: 600;
+	margin-bottom: 0.3rem;
+}
+
+.loan-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.6rem;
+}
+
+.loan-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.7rem;
+}
+
+.loan-item {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.9rem 1rem;
+	background: #fff;
+	border: 1px solid #e4e4e7;
+	border-radius: 14px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.loan-top {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.loan-period {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: #27272a;
+}
+
+.loan-date {
+	font-size: 0.85rem;
+	color: #71717a;
+}
+
+.loan-type {
+	font-size: 0.75rem;
+	border-radius: 999px;
+	padding: 0.2rem 0.6rem;
+	white-space: nowrap;
+}
+
+.loan-type.gjj {
+	background: #e0f2fe;
+	color: #0369a1;
+}
+
+.loan-type.sy {
+	background: #ede9fe;
+	color: #6d28d9;
+}
+
+.loan-amount {
+	font-size: 1rem;
+	font-weight: 600;
+	color: #b45309;
+}
+
+.loan-deducations {
+	font-size: 0.85rem;
+	color: #52525b;
+}
+
+.loan-deduc-title {
+	display: block;
+	font-size: 0.8rem;
+	color: #71717a;
+	margin-bottom: 0.3rem;
+}
+
+.loan-deduc-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.3rem 0.8rem;
+}
+
+.loan-deduc-grid b {
+	color: #27272a;
+	font-weight: 600;
+}
+
+.loan-actions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 0.2rem;
+}
+
+.loan-actions button {
+	flex: 1;
+}
+
+/* ---------- 购房页 ---------- */
+.section-card {
+	background: #fff;
+	border: 1px solid #e4e4e7;
+	border-radius: 16px;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.section-title {
+	font-size: 1.05rem;
+	font-weight: 600;
+	color: #27272a;
+	margin-bottom: 0.8rem;
+}
+
+.overview-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.7rem;
+}
+
+.overview-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem;
+}
+
+.overview-label {
+	font-size: 0.95rem;
+	color: #52525b;
+	flex: none;
+}
+
+.overview-value-wrap {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.overview-value {
+	font-size: 1rem;
+	font-weight: 600;
+	color: #27272a;
+	white-space: nowrap;
+}
+
+.edit-btn,
+.save-btn {
+	font-size: 0.82rem;
+	min-height: 32px;
+	padding: 0.3rem 0.7rem;
+	border-radius: 8px;
+}
+
+.edit-btn {
+	background: #f4f4f5;
+	color: #3f3f46;
+}
+
+.edit-btn:active {
+	background: #e4e4e7;
+}
+
+.save-btn {
+	background: #f59e0b;
+	color: #fff;
+	font-weight: 600;
+}
+
+.save-btn:active {
+	background: #d97706;
+}
+
+.overview-edit {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	flex: 1;
+	justify-content: flex-end;
+}
+
+.overview-edit input {
+	width: 72px;
+	padding: 0.4rem 0.5rem;
+	border: 1px solid #d4d4d8;
+	border-radius: 8px;
+	font-size: 0.9rem;
+	min-height: 36px;
+}
+
+.overview-edit input:focus {
+	outline: 2px solid #f59e0b;
+	border-color: transparent;
+}
+
+.overview-edit span {
+	font-size: 0.85rem;
+	color: #71717a;
+}
+
+.loan-entry-btn {
+	width: 100%;
+	margin-top: 0.9rem;
+	background: #3b82f6;
+	color: #fff;
+	padding: 0.75rem;
+	font-weight: 600;
+	min-height: 46px;
+	border-radius: 10px;
+}
+
+.loan-entry-btn:active {
+	background: #2563eb;
+}
+
+.events-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.8rem;
+}
+
+.events-head .section-title {
+	margin-bottom: 0;
+}
+
+.add-btn {
+	background: #f59e0b;
+	color: #fff;
+	font-size: 0.85rem;
+	font-weight: 600;
+	padding: 0.45rem 0.8rem;
+	min-height: 36px;
+	border-radius: 9px;
+}
+
+.add-btn:active {
+	background: #d97706;
+}
+
+.event-form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	margin-bottom: 0.9rem;
+	border: 1px dashed #d4d4d8;
+	border-radius: 12px;
+	padding: 0.8rem;
+}
+
+.event-form input,
+.event-form textarea {
+	width: 100%;
+	padding: 0.7rem 0.8rem;
+	border: 1px solid #d4d4d8;
+	border-radius: 10px;
+	font-size: 1rem;
+	background: #fff;
+	color: #27272a;
+	font-family: inherit;
+}
+
+.event-form input:focus,
+.event-form textarea:focus {
+	outline: 2px solid #f59e0b;
+	border-color: transparent;
+}
+
+.event-form textarea {
+	resize: vertical;
+	min-height: 88px;
+}
+
+.event-form-actions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 0.2rem;
+}
+
+.event-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.7rem;
+}
+
+.event-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.9rem 1rem;
+	background: #fff;
+	border: 1px solid #e4e4e7;
+	border-radius: 14px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.event-head {
+	display: flex;
+	align-items: baseline;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.event-date {
+	font-size: 0.85rem;
+	color: #3b82f6;
+	font-weight: 600;
+	flex: none;
+}
+
+.event-title {
+	font-size: 1.05rem;
+	font-weight: 600;
+	color: #27272a;
+}
+
+.event-items {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.event-items li {
+	font-size: 0.9rem;
+	color: #52525b;
+	padding-left: 0.5rem;
+	border-left: 2px solid #e4e4e7;
+}
+
+.event-actions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 0.2rem;
+}
+
+.event-actions button {
+	flex: 1;
+}
+
+/* ---------- 日期输入框对齐与日历图标 ---------- */
+.loan-form input[type="date"] {
+	height: 46px;
+	min-height: 46px;
+	line-height: 1.6;
+}
+
+.loan-form input[type="date"]::-webkit-calendar-picker-indicator,
+.event-form input[type="date"]::-webkit-calendar-picker-indicator {
+	opacity: 1;
+	cursor: pointer;
+}

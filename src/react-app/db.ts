@@ -75,3 +75,169 @@ export async function deleteMemo(id: number): Promise<void> {
 	const { error } = await db.from("memos").delete().eq("id", id);
 	throwIfError(error);
 }
+
+// ---------- 屿樾府贷款 ----------
+
+export type LoanType = "公积金贷款" | "商业贷款";
+
+export type LoanPayment = {
+	id: number;
+	pay_date: string;
+	period_num: number;
+	loan_type: LoanType;
+	amount: number;
+	yfy_gjj: number;
+	yfy_fb: number;
+	zsy_gjj: number;
+	bank_card: number;
+	created_at: string;
+};
+
+export type LoanInput = Omit<LoanPayment, "id" | "created_at">;
+
+function normalizeLoan(row: LoanPayment): LoanPayment {
+	return {
+		id: row.id,
+		pay_date: row.pay_date,
+		period_num: Number(row.period_num),
+		loan_type: row.loan_type,
+		amount: Number(row.amount),
+		yfy_gjj: Number(row.yfy_gjj),
+		yfy_fb: Number(row.yfy_fb),
+		zsy_gjj: Number(row.zsy_gjj),
+		bank_card: Number(row.bank_card),
+		created_at: row.created_at,
+	};
+}
+
+export async function listLoans(): Promise<LoanPayment[]> {
+	const db = await getRdb();
+	const { data, error } = await db
+		.from("loan_payments")
+		.select(
+			"id, pay_date, period_num, loan_type, amount, yfy_gjj, yfy_fb, zsy_gjj, bank_card, created_at",
+		)
+		.order("pay_date", { ascending: false })
+		.order("id", { ascending: false });
+	throwIfError(error);
+	return (data ?? []).map((row) => normalizeLoan(row as LoanPayment));
+}
+
+export async function createLoan(input: LoanInput): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("loan_payments").insert(input);
+	throwIfError(error);
+}
+
+export async function updateLoan(id: number, input: LoanInput): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("loan_payments").update(input).eq("id", id);
+	throwIfError(error);
+}
+
+export async function deleteLoan(id: number): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("loan_payments").delete().eq("id", id);
+	throwIfError(error);
+}
+
+// ---------- 屿樾府购房 ----------
+
+export type OverviewKey =
+	| "original_price"
+	| "deduction"
+	| "actual_price"
+	| "down_payment"
+	| "early_repayment"
+	| "gjj_loan"
+	| "sy_loan";
+
+export type OverviewMap = Partial<Record<OverviewKey, number>>;
+
+export type PurchaseEvent = {
+	id: number;
+	event_date: string;
+	title: string;
+	items: string[];
+	created_at: string;
+};
+
+export type PurchaseEventInput = {
+	event_date: string;
+	title: string;
+	items: string[];
+};
+
+export async function listOverview(): Promise<OverviewMap> {
+	const db = await getRdb();
+	const { data, error } = await db.from("purchase_overview").select("key, value");
+	throwIfError(error);
+	const rows = (data ?? []) as { key: string; value: number | string }[];
+	const map: OverviewMap = {};
+	for (const row of rows) {
+		map[row.key as OverviewKey] = Number(row.value);
+	}
+	return map;
+}
+
+export async function updateOverview(key: OverviewKey, value: number): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("purchase_overview").update({ value }).eq("key", key);
+	throwIfError(error);
+}
+
+function normalizeEvent(row: PurchaseEvent): PurchaseEvent {
+	const rawItems = typeof row.items === "string" ? row.items : "";
+	return {
+		id: row.id,
+		event_date: row.event_date,
+		title: row.title,
+		items: rawItems
+			.split("\n")
+			.map((s) => s.trim())
+			.filter(Boolean),
+		created_at: row.created_at,
+	};
+}
+
+export async function listPurchaseEvents(): Promise<PurchaseEvent[]> {
+	const db = await getRdb();
+	const { data, error } = await db
+		.from("purchase_events")
+		.select("id, event_date, title, items, created_at")
+		.order("id", { ascending: true });
+	throwIfError(error);
+	return (data ?? []).map((row) => normalizeEvent(row as PurchaseEvent));
+}
+
+export async function createPurchaseEvent(input: PurchaseEventInput): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("purchase_events").insert({
+		event_date: input.event_date,
+		title: input.title,
+		items: input.items.join("\n"),
+	});
+	throwIfError(error);
+}
+
+export async function updatePurchaseEvent(
+	id: number,
+	input: PurchaseEventInput,
+): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db
+		.from("purchase_events")
+		.update({
+			event_date: input.event_date,
+			title: input.title,
+			items: input.items.join("\n"),
+		})
+		.eq("id", id);
+	throwIfError(error);
+}
+
+export async function deletePurchaseEvent(id: number): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("purchase_events").delete().eq("id", id);
+	throwIfError(error);
+}
