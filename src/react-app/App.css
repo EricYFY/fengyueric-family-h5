@@ -322,6 +322,10 @@
 	background: #3b82f6;
 }
 
+.entry-icon.nanny-icon {
+	background: #10b981;
+}
+
 /* ---------- 贷款页 ---------- */
 .loan-header {
 	position: sticky;
@@ -749,6 +753,14 @@
 
 .event-actions button {
 	flex: 1;
+}
+
+.complaint-content {
+	margin: 0;
+	font-size: 0.95rem;
+	color: #3f3f46;
+	white-space: pre-wrap;
+	word-break: break-word;
 }
 
 /* ---------- 日期输入框对齐与日历图标 ---------- */

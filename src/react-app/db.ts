@@ -241,3 +241,49 @@ export async function deletePurchaseEvent(id: number): Promise<void> {
 	const { error } = await db.from("purchase_events").delete().eq("id", id);
 	throwIfError(error);
 }
+
+// ---------- 育儿嫂吐槽 ----------
+
+export type NannyComplaint = {
+	id: number;
+	event_date: string;
+	content: string;
+	created_at: string;
+};
+
+export type NannyComplaintInput = {
+	event_date: string;
+	content: string;
+};
+
+export async function listNannyComplaints(): Promise<NannyComplaint[]> {
+	const db = await getRdb();
+	const { data, error } = await db
+		.from("nanny_complaints")
+		.select("id, event_date, content, created_at")
+		.order("event_date", { ascending: false })
+		.order("id", { ascending: false });
+	throwIfError(error);
+	return (data ?? []) as NannyComplaint[];
+}
+
+export async function createNannyComplaint(input: NannyComplaintInput): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("nanny_complaints").insert(input);
+	throwIfError(error);
+}
+
+export async function updateNannyComplaint(
+	id: number,
+	input: NannyComplaintInput,
+): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("nanny_complaints").update(input).eq("id", id);
+	throwIfError(error);
+}
+
+export async function deleteNannyComplaint(id: number): Promise<void> {
+	const db = await getRdb();
+	const { error } = await db.from("nanny_complaints").delete().eq("id", id);
+	throwIfError(error);
+}

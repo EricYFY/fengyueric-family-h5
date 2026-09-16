@@ -25,10 +25,16 @@ import {
 	type OverviewMap,
 	type PurchaseEvent,
 	type PurchaseEventInput,
+	listNannyComplaints,
+	createNannyComplaint,
+	updateNannyComplaint,
+	deleteNannyComplaint,
+	type NannyComplaint,
+	type NannyComplaintInput,
 } from "./db";
 import "./App.css";
 
-type View = "home" | "memo" | "purchase" | "loan";
+type View = "home" | "memo" | "purchase" | "loan" | "nanny";
 
 function App() {
 	const [view, setView] = useState<View>("home");
@@ -38,6 +44,7 @@ function App() {
 			<HomePage
 				onEnterMemo={() => setView("memo")}
 				onEnterPurchase={() => setView("purchase")}
+				onEnterNanny={() => setView("nanny")}
 			/>
 		);
 	}
@@ -52,15 +59,20 @@ function App() {
 	if (view === "loan") {
 		return <LoanPage onBack={() => setView("purchase")} />;
 	}
+	if (view === "nanny") {
+		return <NannyComplaintPage onBack={() => setView("home")} />;
+	}
 	return <MemoPage onBack={() => setView("home")} />;
 }
 
 function HomePage({
 	onEnterMemo,
 	onEnterPurchase,
+	onEnterNanny,
 }: {
 	onEnterMemo: () => void;
 	onEnterPurchase: () => void;
+	onEnterNanny: () => void;
 }) {
 	return (
 		<div className="page home">
@@ -76,13 +88,21 @@ function HomePage({
 					<span className="entry-arrow">›</span>
 				</button>
 				<button className="entry-card" onClick={onEnterPurchase}>
-					<span className="entry-icon loan-icon">购</span>
-					<div className="entry-text">
-						<span className="entry-title">屿樾府购房</span>
-						<span className="entry-desc">购房总览、大事记与贷款还款</span>
-					</div>
-					<span className="entry-arrow">›</span>
-				</button>
+						<span className="entry-icon loan-icon">购</span>
+						<div className="entry-text">
+							<span className="entry-title">屿樾府购房</span>
+							<span className="entry-desc">购房总览、大事记与贷款还款</span>
+						</div>
+						<span className="entry-arrow">›</span>
+					</button>
+					<button className="entry-card" onClick={onEnterNanny}>
+						<span className="entry-icon nanny-icon">槽</span>
+						<div className="entry-text">
+							<span className="entry-title">育儿嫂吐槽</span>
+							<span className="entry-desc">记录对育儿嫂的吐槽事件</span>
+						</div>
+						<span className="entry-arrow">›</span>
+					</button>
 			</div>
 		</div>
 	);
@@ -545,6 +565,166 @@ function LoanPage({ onBack }: { onBack: () => void }) {
 									编辑
 								</button>
 								<button className="danger-btn" onClick={() => handleDelete(loan.id)}>
+									删除
+								</button>
+							</div>
+						</li>
+					))}
+				</ul>
+			)}
+		</div>
+	);
+}
+
+function NannyComplaintPage({ onBack }: { onBack: () => void }) {
+	const [items, setItems] = useState<NannyComplaint[]>([]);
+	const [date, setDate] = useState("");
+	const [content, setContent] = useState("");
+	const [editingId, setEditingId] = useState<number | null>(null);
+	const [showForm, setShowForm] = useState(false);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
+
+	async function load() {
+		try {
+			setItems(await listNannyComplaints());
+		} catch (e) {
+			setError(e instanceof Error ? e.message : "加载失败");
+		} finally {
+			setLoading(false);
+		}
+	}
+
+	useEffect(() => {
+		load();
+	}, []);
+
+	function openAdd() {
+		setEditingId(null);
+		setDate("");
+		setContent("");
+		setError("");
+		setShowForm(true);
+	}
+
+	function startEdit(item: NannyComplaint) {
+		setEditingId(item.id);
+		setDate(toIsoDate(item.event_date));
+		setContent(item.content);
+		setError("");
+		setShowForm(true);
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}
+
+	function cancel() {
+		setEditingId(null);
+		setDate("");
+		setContent("");
+		setError("");
+		setShowForm(false);
+	}
+
+	async function handleSubmit(e: FormEvent) {
+		e.preventDefault();
+		const event_date = date.trim();
+		const nextContent = content.trim();
+		if (!event_date || !nextContent) {
+			setError("请填写日期和吐槽事件");
+			return;
+		}
+		const input: NannyComplaintInput = { event_date, content: nextContent };
+		try {
+			if (editingId == null) {
+				await createNannyComplaint(input);
+			} else {
+				await updateNannyComplaint(editingId, input);
+			}
+			setShowForm(false);
+			setEditingId(null);
+			setDate("");
+			setContent("");
+			setError("");
+			await load();
+		} catch (err) {
+			setError(err instanceof Error ? err.message : "保存失败");
+		}
+	}
+
+	async function handleDelete(id: number) {
+		if (!window.confirm("确定删除这条吐槽吗？")) return;
+		try {
+			await deleteNannyComplaint(id);
+			if (editingId === id) cancel();
+			await load();
+		} catch (e) {
+			setError(e instanceof Error ? e.message : "删除失败");
+		}
+	}
+
+	return (
+		<div className="page nanny">
+			<header className="loan-header">
+				<button className="back-btn" onClick={onBack}>
+					← 返回
+				</button>
+				<h1>育儿嫂吐槽</h1>
+			</header>
+
+			<div className="events-head">
+				<h2 className="section-title">吐槽列表</h2>
+				<button className="add-btn" onClick={openAdd}>
+					增加吐槽
+				</button>
+			</div>
+
+			{showForm && (
+				<form className="event-form" onSubmit={handleSubmit}>
+					<label className="field">
+						<span className="field-label">日期</span>
+						<input
+							type="date"
+							value={date}
+							onChange={(e) => setDate(e.target.value)}
+						/>
+					</label>
+					<label className="field">
+						<span className="field-label">吐槽事件</span>
+						<textarea
+							value={content}
+							onChange={(e) => setContent(e.target.value)}
+							placeholder="例如：今天育儿嫂……"
+						/>
+					</label>
+					<div className="event-form-actions">
+						<button type="submit" className="primary-btn">
+							{editingId == null ? "添加吐槽" : "保存修改"}
+						</button>
+						<button type="button" className="ghost-btn" onClick={cancel}>
+							取消
+						</button>
+					</div>
+				</form>
+			)}
+
+			{error && <p className="error">{error}</p>}
+
+			{loading ? (
+				<p className="hint">加载中…</p>
+			) : items.length === 0 ? (
+				<p className="hint">暂无吐槽，点“增加吐槽”记录一条吧</p>
+			) : (
+				<ul className="event-list">
+					{items.map((it) => (
+						<li className="event-card" key={it.id}>
+							<div className="event-head">
+								<span className="event-date">{formatDate(it.event_date)}</span>
+							</div>
+							<p className="complaint-content">{it.content}</p>
+							<div className="event-actions">
+								<button className="ghost-btn" onClick={() => startEdit(it)}>
+									编辑
+								</button>
+								<button className="danger-btn" onClick={() => handleDelete(it.id)}>
 									删除
 								</button>
 							</div>
